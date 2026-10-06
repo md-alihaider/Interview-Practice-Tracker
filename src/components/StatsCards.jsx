@@ -1,11 +1,15 @@
 const StatsCards = ({
   totalQuestions,
-  completedQuestions,
   completedDSAQuestions,
-  completedInterviewsQuestions,
+  completedInterviewQuestions,
 }) => {
   const machineCodingStatus = "In Progress";
-  const machineCodingClass = "Ready" ? "text-green-400" : "text-violet-400";
+
+  const machineCodingClass =
+    machineCodingStatus === "In Progress"
+      ? "text-violet-400"
+      : "text-green-400";
+
   return (
     <section className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
       <div className="rounded-xl border border-white/10 bg-white/3 p-4">
@@ -21,9 +25,9 @@ const StatsCards = ({
       </div>
 
       <div className="rounded-xl border border-white/10 bg-white/3 p-4">
-        <p className="text-sm text-slate-400">Completed Interviews Questions</p>
+        <p className="text-sm text-slate-400">Completed Interview Questions</p>
         <p className="mt-2 text-2xl font-bold text-yellow-400">
-          {completedInterviewsQuestions}
+          {completedInterviewQuestions}
         </p>
       </div>
 

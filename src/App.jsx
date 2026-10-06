@@ -1,7 +1,11 @@
+import { useEffect, useState } from "react";
+
 import Header from "./components/Header";
+import ProgressBar from "./components/ProgressBar";
+import QuestionSection from "./components/QuestionSection";
 import StatsCards from "./components/StatsCards";
 
-const questions = [
+const initialQuestions = [
   {
     id: 1,
     title: "Two Sum",
@@ -11,42 +15,104 @@ const questions = [
   },
   {
     id: 2,
-    title: "Valid Parentheses",
+    title: "Remove Duplicates from Sorted Array",
     category: "DSA",
     difficulty: "Easy",
     status: "Pending",
   },
   {
     id: 3,
-    title: "Reverse Linked List",
+    title: "Rotate Array",
     category: "DSA",
     difficulty: "Medium",
-    status: "Pending",
+    status: "In Progress",
   },
   {
     id: 4,
-    title: "REST API Design",
-    category: "Backend",
+    title: "Wrong Branch, Correct Work",
+    category: "Git",
     difficulty: "Medium",
     status: "Completed",
+  },
+  {
+    id: 5,
+    title: "Merge Conflict During PR",
+    category: "Git",
+    difficulty: "Medium",
+    status: "Pending",
   },
 ];
 
 const App = () => {
+  // Load questions from localStorage
+  const [questions, setQuestions] = useState(() => {
+    const savedQuestions = localStorage.getItem("interviewQuestions");
+
+    return savedQuestions ? JSON.parse(savedQuestions) : initialQuestions;
+  });
+
+  // Save questions to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("interviewQuestions", JSON.stringify(questions));
+  }, [questions]);
+
+  // Total questions
+  const totalQuestions = questions.length;
+
+  // Completed questions
   const completedQuestions = questions.filter(
     (question) => question.status === "Completed",
   ).length;
 
-  const totalQuestions = questions.length;
+  // Completed DSA questions
   const completedDSAQuestions = questions.filter(
     (question) =>
       question.category === "DSA" && question.status === "Completed",
-  );
+  ).length;
 
-  const completedInterviewsQuestions = questions.filter(
+  // Completed Interview/Technical questions
+  const completedInterviewQuestions = questions.filter(
     (question) =>
-      question.category === "Interview" && question.status === "Completed",
-  );
+      (question.category === "Git" || question.category === "Technical") &&
+      question.status === "Completed",
+  ).length;
+
+  // Add question
+  const addQuestion = (question) => {
+    const newQuestion = {
+      id: Date.now(),
+      ...question,
+    };
+
+    setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+  };
+
+  // Edit question
+  const editQuestion = (id, updatedQuestion) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((question) =>
+        question.id === id
+          ? {
+              ...question,
+              ...updatedQuestion,
+            }
+          : question,
+      ),
+    );
+  };
+
+  // Delete question
+  const deleteQuestion = (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this question?",
+    );
+
+    if (!confirmed) return;
+
+    setQuestions((prevQuestions) =>
+      prevQuestions.filter((question) => question.id !== id),
+    );
+  };
 
   return (
     <div className="min-h-screen w-full bg-slate-950 text-white">
@@ -72,107 +138,22 @@ const App = () => {
         {/* Stats */}
         <StatsCards
           totalQuestions={totalQuestions}
-          completedQuestions={completedQuestions}
-          completedDSAQuestions={completedDSAQuestions.length}
-          completedInterviewsQuestions={completedInterviewsQuestions.length}
+          completedDSAQuestions={completedDSAQuestions}
+          completedInterviewQuestions={completedInterviewQuestions}
         />
 
-        {/* Questions Section */}
-        <section>
-          {/* Section Header */}
-          <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h3 className="text-lg font-semibold">Practice Questions</h3>
-              <p className="mt-1 text-sm text-slate-400">
-                Keep improving your interview skills.
-              </p>
-            </div>
+        {/* Progress */}
+        <div className="mt-6">
+          <ProgressBar completed={completedQuestions} total={totalQuestions} />
+        </div>
 
-            {/* Search */}
-            <input
-              type="text"
-              placeholder="Search questions..."
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none placeholder:text-slate-500 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/10 sm:w-64"
-            />
-          </div>
-
-          {/* Filters */}
-          <div className="mb-5 flex gap-2 overflow-x-auto pb-1">
-            <button className="shrink-0 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white">
-              All
-            </button>
-
-            <button className="shrink-0 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 transition hover:bg-white/10">
-              DSA
-            </button>
-
-            <button className="shrink-0 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 transition hover:bg-white/10">
-              Backend
-            </button>
-
-            <button className="shrink-0 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 transition hover:bg-white/10">
-              Frontend
-            </button>
-          </div>
-
-          {/* Question List */}
-          <div className="space-y-3">
-            {questions.map((question) => (
-              <div
-                key={question.id}
-                className="group flex flex-col gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-blue-500/30 hover:bg-white/[0.05] sm:flex-row sm:items-center sm:justify-between"
-              >
-                {/* Question Info */}
-                <div className="min-w-0">
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-sm font-semibold text-blue-400">
-                      {question.id}
-                    </span>
-
-                    <h4 className="truncate font-semibold text-slate-100">
-                      {question.title}
-                    </h4>
-                  </div>
-
-                  <div className="mt-3 flex flex-wrap items-center gap-2 pl-11">
-                    <span className="rounded-md bg-slate-800 px-2.5 py-1 text-xs text-slate-300">
-                      {question.category}
-                    </span>
-
-                    <span
-                      className={`rounded-md px-2.5 py-1 text-xs font-medium ${
-                        question.difficulty === "Easy"
-                          ? "bg-emerald-500/10 text-emerald-400"
-                          : question.difficulty === "Medium"
-                            ? "bg-yellow-500/10 text-yellow-400"
-                            : "bg-red-500/10 text-red-400"
-                      }`}
-                    >
-                      {question.difficulty}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Status */}
-                <div className="flex items-center justify-between gap-4 sm:justify-end">
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${
-                      question.status === "Completed"
-                        ? "bg-emerald-500/10 text-emerald-400"
-                        : "bg-yellow-500/10 text-yellow-400"
-                    }`}
-                  >
-                    {question.status}
-                  </span>
-
-                  <button className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-300 transition hover:bg-white/10 hover:text-white">
-                    View
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* Questions */}
+        <QuestionSection
+          questions={questions}
+          onAddQuestion={addQuestion}
+          onEditQuestion={editQuestion}
+          onDeleteQuestion={deleteQuestion}
+        />
       </main>
     </div>
   );
