@@ -236,7 +236,7 @@ https://interview-practice-tracker-six.vercel.app/
 
 GitHub: https://github.com/md-alihaider
 
-Portfolio: https://md-alihaider.vercel.app/
+Portfolio: https://mdalihaider.vercel.app/
 
 ---
 
