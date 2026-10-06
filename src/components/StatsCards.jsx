@@ -3,7 +3,7 @@ const StatsCards = ({
   completedDSAQuestions,
   completedInterviewQuestions,
 }) => {
-  const machineCodingStatus = "In Progress";
+  const machineCodingStatus = "Ready";
 
   const machineCodingClass =
     machineCodingStatus === "In Progress"
