@@ -117,7 +117,7 @@ const QuestionSection = ({
 
       {/* ================= FILTERS ================= */}
 
-      <div className="mb-5 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+      <div className="mb-5 rounded-xl border border-white/10 bg-white/3 p-4">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
           {/* Search */}
           <div className="relative">
@@ -214,9 +214,9 @@ const QuestionSection = ({
 
       {/* ================= TABLE ================= */}
 
-      <div className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.02]">
+      <div className="overflow-hidden rounded-xl border border-white/2">
         {/* Desktop Header */}
-        <div className="hidden grid-cols-[2fr_0.7fr_0.7fr_0.8fr_100px] items-center gap-4 border-b border-white/10 bg-white/[0.04] px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400 md:grid">
+        <div className="hidden grid-cols-[2fr_0.7fr_0.7fr_0.8fr_100px] items-center gap-4 border-b border-white/4 px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400 md:grid">
           <span>Question Title</span>
           <span>Category</span>
           <span>Difficulty</span>
@@ -230,7 +230,7 @@ const QuestionSection = ({
             filteredQuestions.map((question) => (
               <div
                 key={question.id}
-                className="border-b border-white/5 px-5 py-5 last:border-b-0 transition hover:bg-white/[0.03]"
+                className="border-b border-white/5 px-5 py-5 last:border-b-0 transition hover:bg-white/3"
               >
                 {/* ================= DESKTOP ================= */}
 
